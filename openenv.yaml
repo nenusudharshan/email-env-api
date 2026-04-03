@@ -1,0 +1,58 @@
+spec_version: 1
+
+name: email-triage-env
+
+description: |
+  A real-world email triage environment where an agent classifies emails,
+  decides actions, and assigns priorities.
+
+type: space
+runtime: fastapi
+app: server.app:app
+port: 8000
+
+endpoints:
+  reset: /reset
+  step: /step
+  state: /state
+
+action_schema:
+  type: object
+  properties:
+    category:
+      type: string
+      enum: [spam, important, normal]
+    action:
+      type: string
+      enum: [reply, ignore, schedule]
+    priority:
+      type: string
+      enum: [low, medium, high]
+  required: [category, action, priority]
+
+observation_schema:
+  type: object
+  properties:
+    email_text:
+      type: string
+    sender:
+      type: string
+    subject:
+      type: string
+    difficulty:
+      type: string
+    priority_hint:
+      type: string
+      nullable: true
+    done:
+      type: boolean
+    reward:
+      type: number
+
+tasks:
+  - name: easy_task
+    difficulty: easy
+  - name: medium_task
+    difficulty: medium
+  - name: hard_task
+    difficulty: hard
